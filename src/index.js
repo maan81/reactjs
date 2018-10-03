@@ -70,12 +70,14 @@ class Board extends React.Component {
 class Game extends React.Component {
   constructor(props) {
     super(props);
+
     this.state = {
       history: [{
         squares: Array(9).fill(null),
       }],
       stepNumber: 0,
       xIsNext: true,
+      positions: [],
     };
   }
 
@@ -89,6 +91,7 @@ class Game extends React.Component {
     }
 
     squares[i] = this.state.xIsNext ? 'X' : 'O';
+
     this.setState({
       history: history.concat([{
         squares: squares,
@@ -96,13 +99,36 @@ class Game extends React.Component {
       stepNumber: history.length,
       xIsNext: !this.state.xIsNext,
     });
+    this.state.positions.push(i);
   }
 
   jumpTo(step){
     this.setState({
       stepNumber: step,
       xIsNext: (step%2)===0,
+      positions: [],
     });
+  }
+
+  getCurrentPosition(move){
+
+    var step = this.state.positions[move-1];
+    var position = '';
+
+    switch(step){
+      case 0: position='(1,1)';break;
+      case 1: position='(1,2)';break;
+      case 2: position='(1,3)';break;
+      case 3: position='(2,1)';break;
+      case 4: position='(2,2)';break;
+      case 5: position='(2,3)';break;
+      case 6: position='(3,1)';break;
+      case 7: position='(3,2)';break;
+      case 8: position='(3,3)';break;
+      default: position='(-,-)';
+    }
+
+    return 'Position : '+position;
   }
 
   render() {
@@ -112,7 +138,7 @@ class Game extends React.Component {
 
     const moves = history.map((step, move) => {
       const desc = move ?
-        'Go to move #'+move :
+        'Go to move #'+move+'' :
         'Go to game start'
       ;
       return (
@@ -120,7 +146,7 @@ class Game extends React.Component {
           <button
             onClick={() => this.jumpTo(move)}
           >
-            {desc}
+            {desc}, {this.getCurrentPosition(move)}
           </button>
         </li>
       );
