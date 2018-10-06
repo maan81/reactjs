@@ -2,7 +2,21 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
 
-function Square(props) {
+function Square(props,is_winner) {
+  // console.log(props)
+  console.log(is_winner)
+
+  if(is_winner){
+    return (
+      <button
+        className="square square-win"
+        onClick={props.onClick}
+      >
+        {props.value}
+      </button>
+    );
+  }
+
   return (
     <button
       className="square"
@@ -35,6 +49,7 @@ function calculateWinner(squares) {
 
 class Board extends React.Component {
   renderSquare(i) {
+    console.log(this.props)
     return (
       <Square
         key={i}
@@ -136,6 +151,13 @@ class Game extends React.Component {
     return 'Position : '+position;
   }
 
+  highlight_win(positions,states){
+    console.log('in highlight_win')
+    // console.log(positions);
+    // console.log(states)
+    return;
+  }
+
   render() {
     const history = this.state.history;
     const current = history[this.state.stepNumber];
@@ -160,6 +182,7 @@ class Game extends React.Component {
     let status;
     if(winner){
       status = 'Winner: '+ winner;
+      this.highlight_win(this.state.positions,this.state);
     } else{
       status = 'Next player: '+ (this.state.xIsNext ? 'X' : 'O');
     }
